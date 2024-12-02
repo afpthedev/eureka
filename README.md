@@ -1,4 +1,3 @@
-# **Makine Öğrenmesi ve ChatGPT Destekli Veri Analizi Platformu**
 
 ## **Proje Tanımı**
 
