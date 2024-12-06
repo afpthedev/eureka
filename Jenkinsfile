@@ -1,78 +1,40 @@
 pipeline {
-    agent {
-        docker {
-            image 'myorg/php-node-composer:latest'
-            args '-u root:root'
-        }
-    }
-
-    environment {
-        APP_ENV = 'production'
-        DB_HOST = 'mariadb'
-        DB_PORT = '3306'
-        DB_DATABASE = 'laravel_db'
-        DB_USERNAME = 'laravel_user'
-        DB_PASSWORD = 'laravel_password'
-    }
+    agent any
 
     stages {
-        stage('Initialize') {
+        stage('Checkout') {
             steps {
-                echo 'Pipeline başlatılıyor...'
+                git branch: 'main', url: 'https://github.com/afpthedev/eureka.git'
             }
         }
-
-        stage('Install PHP Dependencies') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Composer bağımlılıkları yükleniyor...'
-                sh 'composer install --no-dev --optimize-autoloader'
+                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
             }
         }
-
-        stage('Install JS Dependencies & Build') {
+        stage('Migrate DB') {
             steps {
-                echo 'NPM bağımlılıkları yükleniyor ve build yapılıyor...'
-                sh 'npm install'
-                sh 'npm run prod'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                echo 'Testler çalıştırılıyor...'
-                sh 'php artisan test'
-            }
-        }
-
-        stage('Database Migrations') {
-            steps {
-                echo 'Veritabanı migrasyonları uygulanıyor...'
                 sh 'php artisan migrate --force'
             }
         }
-
-        stage('Deploy to Server') {
+        stage('Build Assets') {
             steps {
-                echo 'Kod canlı ortama aktarılıyor...'
-                sh 'rsync -avz --exclude=.git ./ /var/www/eureka/'
+                sh 'npm install && npm run prod'
             }
         }
-
-        stage('Restart Services') {
+        stage('Clear Cache') {
             steps {
-                echo 'Servisler yeniden başlatılıyor...'
-                sh 'sudo systemctl restart php8.1-fpm'
-                sh 'sudo systemctl restart nginx'
+                sh 'php artisan optimize:clear'
+                sh 'php artisan cache:clear'
+                sh 'php artisan config:cache'
+                sh 'php artisan route:cache'
             }
         }
     }
-
     post {
-        success {
-            echo 'Deployment başarılı!'
-        }
-        failure {
-            echo 'Deployment başarısız!'
+        always {
+            sh 'chown -R www-data:www-data /var/www/isar'
+            sh 'systemctl reload nginx'
         }
     }
 }
