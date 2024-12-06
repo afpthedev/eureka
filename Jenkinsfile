@@ -1,11 +1,5 @@
 pipeline {
-     agent {
-            docker {
-                image 'composer:2' // Composer yüklü resmi imaj
-                args '-u root:root' // Gerekirse root olarak çalıştır
-            }
-        }
-
+     agent any
     environment {
         APP_ENV = 'production'
         DB_HOST = 'mariadb'
