@@ -1,5 +1,11 @@
 pipeline {
-     agent any
+    agent {
+        docker {
+            image 'myorg/php-node-composer:latest'
+            args '-u root:root'
+        }
+    }
+
     environment {
         APP_ENV = 'production'
         DB_HOST = 'mariadb'
@@ -19,8 +25,7 @@ pipeline {
         stage('Install PHP Dependencies') {
             steps {
                 echo 'Composer bağımlılıkları yükleniyor...'
-                sh 'curl -sS https://getcomposer.org/installer | php'
-                sh 'php composer.phar install --no-dev --optimize-autoloader'
+                sh 'composer install --no-dev --optimize-autoloader'
             }
         }
 
