@@ -20,7 +20,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo 'Kaynak kod GitHub reposundan çekiliyor...'
-                git branch: 'main', url: 'git@github.com:afpthedev/eureka.git'
+                // Burada credentialsId ekliyoruz:
+                git branch: 'main', url: 'git@github.com:afpthedev/eureka.git', credentialsId: 'my-ssh-credentials'
             }
         }
 
