@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+     agent {
+            docker {
+                image 'composer:2' // Composer yüklü resmi imaj
+                args '-u root:root' // Gerekirse root olarak çalıştır
+            }
+        }
 
     environment {
         APP_ENV = 'production'
@@ -20,7 +25,8 @@ pipeline {
         stage('Install PHP Dependencies') {
             steps {
                 echo 'Composer bağımlılıkları yükleniyor...'
-                sh 'composer install --no-dev --optimize-autoloader'
+                sh 'curl -sS https://getcomposer.org/installer | php'
+                sh 'php composer.phar install --no-dev --optimize-autoloader'
             }
         }
 
