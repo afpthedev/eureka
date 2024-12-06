@@ -9,12 +9,10 @@ class Kurban extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'type',
-        'price',
-        'phone',
+    protected $fillable = ['contact_id', 'type', 'price'];
 
-        'status',
-    ];
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
 }

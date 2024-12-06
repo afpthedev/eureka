@@ -7,11 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.0",
+        "codeat3/blade-carbon-icons": "^2.31",
+        "codeat3/blade-file-icons": "^1.9",
+        "davidhsianturi/blade-bootstrap-icons": "^1.5",
         "filament/filament": "^3.2",
         "filament/forms": "^3.2",
         "filament/tables": "^3.2",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

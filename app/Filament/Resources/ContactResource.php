@@ -1,29 +1,54 @@
 <?php
 
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactResource\Pages;
-use App\Filament\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->label('Bağışçı Adı')
+                    ->required(),
+
+                TextInput::make('phone')
+                    ->label('Telefon Numarası')
+                    ->required(),
+
+                TextInput::make('email')
+                    ->label('E-Posta')
+                    ->email()
+                    ->nullable(),
+
+                TextInput::make('address')
+                    ->label('Adres')
+                    ->nullable(),
+
+                Select::make('message_language')
+                    ->label('Mesaj Dili')
+                    ->options([
+                        'TR' => 'Türkçe',
+                        'EN' => 'İngilizce',
+                    ])
+                    ->default('TR')
+                    ->required(),
             ]);
     }
 
@@ -31,26 +56,31 @@ class ContactResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
-            ->filters([
-                //
+                TextColumn::make('name')
+                    ->label('Bağışçı Adı')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('phone')
+                    ->label('Telefon Numarası'),
+
+                TextColumn::make('message_language')
+                    ->label('Mesaj Dili')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'TR' => 'Türkçe',
+                        'EN' => 'İngilizce',
+                        default => $state, // Varsayılan değer
+                    }),
+
+                TextColumn::make('email')
+                    ->label('E-Posta'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

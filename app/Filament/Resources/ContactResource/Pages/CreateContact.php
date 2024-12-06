@@ -9,4 +9,10 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateContact extends CreateRecord
 {
     protected static string $resource = ContactResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        // Kayıt işleminden sonra List Kurban sayfasına yönlendirme
+        return $this->getResource()::getUrl('index');
+    }
 }
