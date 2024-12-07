@@ -1,40 +1,57 @@
 pipeline {
     agent any
 
+    environment {
+        DEPLOY_DIR = "/var/www/isar"
+        REPO_URL = "https://github.com/afpthedev/eureka.git"
+    }
+
+    stage('Prepare Deployment Directory') {
+        steps {
+            sh 'mkdir -p /var/www/isar'
+            sh 'chown -R www-data:www-data /var/www/isar'
+        }
+    }
+
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/afpthedev/eureka.git'
+                git branch: 'main', url: "${REPO_URL}"
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                sh '''
+                apt-get update
+                apt-get install -y php-cli php-mbstring php-xml php-intl unzip curl git
+                composer install --no-interaction --prefer-dist --optimize-autoloader
+                apt-get update
+                apt-get install -y
+                php-mysql
+                php-sqlite3
+                '''
             }
         }
-        stage('Migrate DB') {
+
+        stage('Deploy') {
             steps {
-                sh 'php artisan migrate --force'
-            }
-        }
-        stage('Build Assets') {
-            steps {
-                sh 'npm install && npm run prod'
-            }
-        }
-        stage('Clear Cache') {
-            steps {
-                sh 'php artisan optimize:clear'
-                sh 'php artisan cache:clear'
-                sh 'php artisan config:cache'
-                sh 'php artisan route:cache'
+                sh '''
+                mkdir -p ${DEPLOY_DIR}
+                rsync -av --exclude=".git" . ${DEPLOY_DIR}
+                php ${DEPLOY_DIR}/artisan migrate --force
+                '''
             }
         }
     }
+
     post {
-        always {
-            sh 'chown -R www-data:www-data /var/www/isar'
-            sh 'systemctl reload nginx'
+        success {
+            echo 'Pipeline başarıyla tamamlandı!'
+        }
+        failure {
+            echo 'Pipeline sırasında bir hata oluştu.'
         }
     }
 }
