@@ -7,7 +7,8 @@ pipeline {
         }
     }
 
-    // Central configuration and credentials management
+
+
     environment {
         // Deployment Paths
         DEPLOY_BASE_DIR = "/var/www/myproject"
