@@ -5,8 +5,6 @@ pipeline {
         DEPLOY_DIR = "/var/www/isar"
         REPO_URL = "https://github.com/afpthedev/eureka.git"
     }
-
-
     stages {
     stage('Prepare Deployment Directory') {
             steps {
@@ -28,8 +26,8 @@ pipeline {
                 composer install --no-interaction --prefer-dist --optimize-autoloader
                 apt-get update
                 apt-get install -y
-                php-mysql
-                php-sqlite3
+                apt-get install php-mysql
+                apt-get install php-sqlite3
                 '''
             }
         }
