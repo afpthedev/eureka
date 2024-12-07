@@ -6,15 +6,14 @@ pipeline {
         REPO_URL = "https://github.com/afpthedev/eureka.git"
     }
 
-    stage('Prepare Deployment Directory') {
-        steps {
-            sh 'mkdir -p /var/www/isar'
-            sh 'chown -R www-data:www-data /var/www/isar'
-        }
-    }
-
 
     stages {
+    stage('Prepare Deployment Directory') {
+            steps {
+                sh 'mkdir -p /var/www/isar'
+                sh 'chown -R www-data:www-data /var/www/isar'
+            }
+        }
         stage('Checkout') {
             steps {
                 git branch: 'main', url: "${REPO_URL}"
