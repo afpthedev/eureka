@@ -26,8 +26,8 @@ pipeline {
                 composer install --no-interaction --prefer-dist --optimize-autoloader
                 apt-get update
                 apt-get install -y
-                apt-get install php-mysql
-                apt-get install php-sqlite3
+                apt-get install -y php-mysql
+                apt-get install -y php-sqlite3
                 '''
             }
         }
