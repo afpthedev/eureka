@@ -1,14 +1,11 @@
 pipeline {
-    // Use a specific agent or node for consistent deployment
+
     agent {
         docker {
             image 'php:8.1-cli'
             args '-u root:root'
         }
     }
-
-
-
     environment {
         // Deployment Paths
         DEPLOY_BASE_DIR = "/var/www/myproject"
