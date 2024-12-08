@@ -1,118 +1,49 @@
 pipeline {
     agent any
-
     environment {
-        // Deployment Directories
-        DEPLOY_DIR = "/var/www/isar"
-        REPO_URL = "https://github.com/afpthedev/eureka.git"
-
-        // Database Configuration
-        DB_HOST = "127.0.0.1"
-        DB_PORT = "3306"
-        DB_DATABASE = "exampledb"
-        DB_USERNAME = "exampleuser"
-        DB_PASSWORD = "examplepass"
-
-        // Docker Container Names
-        MYSQL_CONTAINER = "mysql-docker"
+        DB_HOST = 'db'
+        DB_DATABASE = 'laravel'
+        DB_USERNAME = 'laravel_user'
+        DB_PASSWORD = 'laravel_password'
     }
-
     stages {
-        stage('Prepare Environment') {
+        stage("Build") {
             steps {
-                sh '''
-                    # PHP ve gerekli araçları yükle
-                    apt-get update
-                    apt-get install -y \
-                        php-cli \
-                        php-mbstring \
-                        php-xml \
-                        php-intl \
-                        unzip \
-                        curl \
-                        git \
-                        rsync
-                '''
+                sh 'composer install --no-dev --optimize-autoloader'
+                sh 'cp .env.example .env'
+                sh 'echo DB_HOST=${DB_HOST} >> .env'
+                sh 'echo DB_DATABASE=${DB_DATABASE} >> .env'
+                sh 'echo DB_USERNAME=${DB_USERNAME} >> .env'
+                sh 'echo DB_PASSWORD=${DB_PASSWORD} >> .env'
+                sh 'php artisan key:generate'
+                sh 'php artisan migrate --force'
             }
         }
-
-        stage('Prepare Deployment Directory') {
+        stage("Unit Tests") {
             steps {
-                sh '''
-                    # Deployment dizinini oluştur ve izinleri ayarla
-                    mkdir -p ${DEPLOY_DIR}
-                    chown -R www-data:www-data ${DEPLOY_DIR}
-                    chmod -R 775 ${DEPLOY_DIR}
-                '''
+                sh 'php artisan test'
             }
         }
-
-        stage('Checkout Code') {
+        stage("Static Code Analysis") {
             steps {
-                git branch: 'main', url: "${REPO_URL}"
+                sh 'vendor/bin/phpstan analyse --memory-limit=2G'
+                sh 'vendor/bin/phpcs'
             }
         }
-
-        stage('Install Dependencies') {
+        stage("Docker Build") {
             steps {
-                sh '''
-                    # Composer'ı kur ve bağımlılıkları yükle
-                    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-                    composer install \
-                        --no-interaction \
-                        --prefer-dist \
-                        --optimize-autoloader
-                '''
+                sh 'docker build -t myrepo/laravel-filament:latest .'
             }
         }
-
-        stage('Configure MySQL') {
-            steps {
-                script {
-                    // MySQL konteynerini ve bağlantıyı kontrol et
-                    sh '''
-                    # MySQL konteynerinin çalışıp çalışmadığını doğrula
-                    if ! docker ps | grep ${MYSQL_CONTAINER}; then
-                        echo "MySQL konteyner çalışmıyor! Lütfen kontrol edin."
-                        exit 1
-                    fi
-
-                    # Veritabanı ve kullanıcı oluştur
-                    docker exec ${MYSQL_CONTAINER} mysql -u root -p${DB_PASSWORD} -e "
-                        CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};
-                        CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
-                        GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USERNAME}'@'%';
-                        FLUSH PRIVILEGES;
-                    "
-                    '''
-                }
+        stage("Docker Push") {
+            environment {
+                DOCKER_USERNAME = credentials("docker-username")
+                DOCKER_PASSWORD = credentials("docker-password")
             }
-        }
-
-        stage('Deploy Application') {
             steps {
-                sh '''
-                    # Uygulamayı deploy et
-                    rsync -av --exclude=".git" . ${DEPLOY_DIR}
-
-                    # İzinleri ayarla
-                    chown -R www-data:www-data ${DEPLOY_DIR}
-                    chmod -R 775 ${DEPLOY_DIR}/storage ${DEPLOY_DIR}/bootstrap/cache
-
-                    # Laravel yapılandırma ve migrasyon
-                    php ${DEPLOY_DIR}/artisan config:cache
-                    php ${DEPLOY_DIR}/artisan migrate --force
-                '''
+                sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                sh 'docker push myrepo/laravel-filament:latest'
             }
-        }
-    }
-
-    post {
-        success {
-            echo "🎉 Pipeline başarıyla tamamlandı!"
-        }
-        failure {
-            echo "❌ Pipeline sırasında bir hata oluştu."
         }
     }
 }

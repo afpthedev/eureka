@@ -14,5 +14,11 @@ class ExampleTest extends TestCase
         $this->assertTrue(true);
     }
 
-    
+    public function testHomePage()
+    {
+        $this->get('/')
+            ->assertStatus(200)
+            ->assertSee('Filament Dashboard');
+    }
+
 }
