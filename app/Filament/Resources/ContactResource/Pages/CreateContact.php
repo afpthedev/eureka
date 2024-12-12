@@ -15,4 +15,5 @@ class CreateContact extends CreateRecord
         // Kayıt işleminden sonra List Kurban sayfasına yönlendirme
         return $this->getResource()::getUrl('index');
     }
+
 }

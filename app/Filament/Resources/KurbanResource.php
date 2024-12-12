@@ -1,25 +1,38 @@
 <?php
 namespace App\Filament\Resources;
 
-use App\Exports\KurbanExport;
 use App\Filament\Resources\KurbanResource\Pages\CreateKurban;
-use App\Filament\Resources\KurbanResource\Pages\EditKurban;
 use App\Filament\Resources\KurbanResource\Pages\ListKurbans;
 use App\Models\Contact;
 use App\Models\Kurban;
-use Filament\Forms\Components\TextInput;
+use database\EditKurban;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Maatwebsite\Excel\Excel;
-use PhpOffice\PhpSpreadsheet\Writer\Pdf;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Filter;
+
+
 
 class KurbanResource extends Resource
 {
+    protected static ?string $navigationGroup = 'Bağışlar';
+
+
     protected static ?string $model = Kurban::class;
+
+
+    protected static ?string $navigationIcon = 'mdi-sheep';
+    protected static ?string $navigationLabel = 'Kurban Bağışları';
+
 
     public static function form(Form $form): Form
     {
@@ -62,7 +75,15 @@ class KurbanResource extends Resource
                         return $contact->id;
                     })
                     ->required(),
-
+                Select::make('association')
+                    ->label('Dernek')
+                    ->options([
+                        'MANA' => 'MANA',
+                        'SAHA' => 'SAHA',
+                        'HİCAZ' => 'HİCAZ',
+                        'HEDEF' => 'HEDEF',
+                    ])->default('MANA')
+                    ->required(),
                 // Kurban specific fields
                 Select::make('type')
                     ->label('Kurban Türü')
@@ -72,10 +93,34 @@ class KurbanResource extends Resource
                         'Adak' => 'Adak',
                     ])
                     ->required(),
-
                 TextInput::make('price')
                     ->label('Fiyat')
                     ->numeric()
+                    ->required()
+                    ->default(120),
+                Textarea::make('Notes')
+                    ->label('Notlar')
+                    ->nullable(), // İsteğe bağlı
+
+                Select::make('payment_type')
+                    ->label('Ödeme Türü')
+                    ->options([
+                        'Paypal' => 'Paypal',
+                        'Nakit' => 'Nakit',
+                        'Banka' => 'Banka',
+                    ])->default('Banka')
+                    ->required(),
+                DatePicker::make('sacrifice_date')
+                    ->label('Kurban Kesim Tarihi')
+                    ->required()
+                    ->default(now()),
+                Select::make('status')
+                    ->label('Durum')
+                    ->options([
+                        'Ödendi' => 'Ödendi',
+                        'Ödenmedi' => 'Ödenmedi',
+                    ])
+                    ->default('Ödenmedi') // Varsayılan değer Ödenmedi
                     ->required(),
             ]);
     }
@@ -99,19 +144,94 @@ class KurbanResource extends Resource
                 TextColumn::make('price')
                     ->label('Fiyat')
                     ->money('TRY'),
-            ])
+                TextColumn::make('sacrifice_date')
+                    ->label('Kurban Kesim Tarihi')
+                    ->sortable(),
+            ])->filters([
+                // Dernek Filtreleme
+                Tables\Filters\SelectFilter::make('association')
+                    ->label('Dernek')
+                    ->options([
+                        'MANA' => 'MANA',
+                        'SAHA' => 'SAHA',
+                        'HİCAZ' => 'HİCAZ',
+                        'HEDEF' => 'HEDEF',
+                    ]),
+                    // Kurban Türü Filtreleme
+                SelectFilter::make('type')
+                        ->label('Kurban Türü')
+                        ->options([
+                            'Nafile' => 'Nafile',
+                            'Akika' => 'Akika',
+                            'Adak' => 'Adak',
+                        ]),
+
+                    // Durum Filtreleme
+                SelectFilter::make('status')
+                        ->label('Durum')
+                        ->options([
+                            'Ödendi' => 'Ödendi',
+                            'Ödenmedi' => 'Ödenmedi',
+                        ]),
+
+                    // Ödeme Türü Filtreleme
+                    SelectFilter::make('payment_type')
+                        ->label('Ödeme Türü')
+                        ->options([
+                            'Banka' => 'Banka',
+                            'Nakit' => 'Nakit',
+                            'Paypal' => 'Paypal',
+                        ]),
+
+                    // Fiyat Aralığı Filtreleme
+                    Filter::make('price_range')
+                        ->label('Fiyat Aralığı')
+                        ->form([
+                            TextInput::make('min_price')
+                                ->label('Min Fiyat')
+                                ->numeric(),
+                            TextInput::make('max_price')
+                                ->label('Max Fiyat')
+                                ->numeric(),
+                        ])
+                        ->query(function ($query, $data) {
+                            return $query
+                                ->when($data['min_price'], fn ($q) => $q->where('price', '>=', $data['min_price']))
+                                ->when($data['max_price'], fn ($q) => $q->where('price', '<=', $data['max_price']));
+                        }),
+
+
+                ])
+                ->filtersFormColumns(2)
+                ->filtersFormSchema(fn (array $filters): array => [
+                    Section::make('Kurban Filtreleri')
+                        ->description('Kayıtları filtrelemek için aşağıdaki seçenekleri kullanabilirsiniz.')
+                        ->schema([
+                            $filters['type'],
+                            $filters['status'],
+                            $filters['payment_type'],
+                            $filters['price_range'],
+                            $filters['association'],
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull(),
+                ])
+
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
+
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
 
                 // Tüm liste için Excel indir
                 Tables\Actions\BulkAction::make('export_all_excel')
-                    ->label('Tüm Listeyi Excel Olarak İndir')
-                    ->icon('fileicon-microsoft-excelcomposer require barryvdh/laravel-dompdf
-
-')
+                    ->label('Excel Olarak İndir')
+                    ->icon('fileicon-microsoft-excel')
                     ->action(function () {
                         $kurbans = Kurban::with('contact')->get(); // Tüm listeyi alıyoruz
 
@@ -123,7 +243,7 @@ class KurbanResource extends Resource
 
                 // Tüm liste için PDF indir
                 Tables\Actions\BulkAction::make('export_all_pdf')
-                    ->label('Tüm Listeyi PDF Olarak İndir')
+                    ->label('PDF Olarak İndir')
                     ->icon('carbon-generate-pdf')
                     ->action(function () {
                         $kurbans = Kurban::with('contact')->get(); // Tüm listeyi alıyoruz
@@ -134,6 +254,7 @@ class KurbanResource extends Resource
                                 'Telefon Numarası' => $kurban->contact->phone ?? '',
                                 'Kurban Türü' => $kurban->type,
                                 'Fiyat' => $kurban->price,
+                                'Kurban Kesim Tarihi' => $kurban->sacrifice_date,
                             ];
                         });
 
@@ -143,12 +264,14 @@ class KurbanResource extends Resource
             ]);
     }
 
+
+
     public static function getPages(): array
     {
         return [
             'index' => ListKurbans::route('/'),
             'create' => CreateKurban::route('/create'),
-            'edit' => EditKurban::route('/{record}/edit'),
+            'edit' => \App\Filament\Resources\KurbanResource\Pages\EditKurban::route('/{record}/edit'),
         ];
     }
 }

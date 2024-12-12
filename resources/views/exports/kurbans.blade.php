@@ -12,6 +12,7 @@
         <th>Telefon Numarası</th>
         <th>Kurban Türü</th>
         <th>Fiyat</th>
+        <th>Kurban Tarihi</th>
     </tr>
     </thead>
     <tbody>
@@ -21,6 +22,7 @@
             <td>{{ $row['Telefon Numarası'] }}</td>
             <td>{{ $row['Kurban Türü'] }}</td>
             <td>{{ $row['Fiyat'] }}</td>
+            <td>{{ $row['sacrifice_date'] }}</td>
         </tr>
     @endforeach
     </tbody>

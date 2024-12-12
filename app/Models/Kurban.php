@@ -9,7 +9,12 @@ class Kurban extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['contact_id', 'type', 'price'];
+    protected $fillable = ['contact_id', 'type', 'sacrifice_date',
+        'price',
+        'status',
+        'payment_type',
+        'association',
+        'Notes'];
 
     public function contact()
     {

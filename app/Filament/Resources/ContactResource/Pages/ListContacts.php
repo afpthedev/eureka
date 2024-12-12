@@ -10,10 +10,12 @@ class ListContacts extends ListRecords
 {
     protected static string $resource = ContactResource::class;
 
+    protected static ?string $title = 'Bağışçılar';
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),
         ];
     }
+
 }

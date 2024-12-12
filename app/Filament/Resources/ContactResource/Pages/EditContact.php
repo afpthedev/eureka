@@ -16,4 +16,9 @@ class EditContact extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        // Kayıt işleminden sonra List Kurban sayfasına yönlendirme
+        return $this->getResource()::getUrl('index');
+    }
 }
