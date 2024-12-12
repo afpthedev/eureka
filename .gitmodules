@@ -1,0 +1,3 @@
+[submodule "ml_project"]
+	path = ml_project
+	url = https://github.com/afpthedev/ml-project
