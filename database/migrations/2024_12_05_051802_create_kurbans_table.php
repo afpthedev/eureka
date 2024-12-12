@@ -19,8 +19,6 @@ class CreateKurbansTable extends Migration
             $table->string('Notes')->nullable(); // Notlar (isteğe bağlı)
             $table->string('payment_type')->nullable(); // Ödeme Türü (isteğe bağlı)
             $table->string('association')->nullable(); // Kurban Derneği (isteğe bağlı)
-
-            $table->timestamps('created_at');
         });
     }
 
