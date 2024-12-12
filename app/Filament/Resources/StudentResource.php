@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
+use Filament\Actions\ActionGroup;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -24,12 +25,21 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Talabe İşleri';
+
+    protected static ?string $navigationLabel = 'Talabelerimiz';
+    protected static ?string $navigationIcon = 'phosphor-student-bold';
+
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            FileUpload::make('photo_path')->image()->label('Fotoğraf'),
+            FileUpload::make('photo_path')
+                ->label('Fotoğraf')
+                ->maxSize(1024) // Maksimum 1MB (1024 KB)
+                ->directory('uploads/photos') // Yükleme dizinini ayarlayın
+                ->visibility('public') // Dosyanın genel olarak erişilebilir olmasını sağlar
+                ->uploadingMessage('Resim Yükleniyor...'),
             TextInput::make('name')->required()->label('Talebenin Adı'),
             TextInput::make('phone')->tel()->label('Telefon Numarası'),
             DatePicker::make('birth_date')->label('Doğum Tarihi'),
@@ -68,11 +78,17 @@ class StudentResource extends Resource
                     'Anne Vefat' => 'Anne Vefat',
                     'Baba Vefat' => 'Baba Vefat',
                 ])->label('Anne Baba Durumu'),
+            Select::make('visa-status')
+                ->options([
+                    'Mavi Kart Sahibi' => 'Mavi Kart Sahibi',
+                    'Vize Sahibi' => 'Vize Sahibi',
+                    'İhtiyacı Yok' => 'İhtiyacı Yok',
+                ])->label('Vize Durumu'),
             TextInput::make('guardian_name')->label('İrtibat Veli Adı'),
             TextInput::make('guardian_phone')->tel()->label('İrtibat Veli Telefon'),
             TextInput::make('hometown')->label('Memleketi'),
-            TagsInput::make('languages')->label('Bildiği Diller'),
             Select::make('languages')
+                ->multiple()
                 ->options([
                     'Türkçe' => 'Türkçe',
                     'Almanca' => 'Almanca',
@@ -101,7 +117,11 @@ class StudentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                \Filament\Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -113,7 +133,7 @@ class StudentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           StudentResource\RelationManagers\ReportsRelationManager::class,
         ];
     }
 

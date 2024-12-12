@@ -28,6 +28,8 @@ return new class extends Migration
             $table->json('languages')->nullable();
             $table->string('photo_path')->nullable();
             $table->string('course_address')->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
         });
     }

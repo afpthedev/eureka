@@ -26,7 +26,19 @@ class Student extends Model
         'languages',
         'photo_path',
         'course_address',
+        'latitude',
+        'longitude',
     ];
         // Timestamps kullanımı
     public $timestamps = true;
+
+    protected $casts = [
+        'citizenships' => 'array',
+        'languages' => 'array',
+    ];
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
 }

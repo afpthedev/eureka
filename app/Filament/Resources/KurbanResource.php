@@ -25,11 +25,7 @@ use Filament\Tables\Filters\Filter;
 class KurbanResource extends Resource
 {
     protected static ?string $navigationGroup = 'Bağışlar';
-
-
     protected static ?string $model = Kurban::class;
-
-
     protected static ?string $navigationIcon = 'mdi-sheep';
     protected static ?string $navigationLabel = 'Kurban Bağışları';
 
