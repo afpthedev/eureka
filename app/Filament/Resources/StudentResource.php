@@ -28,7 +28,7 @@ class StudentResource extends Resource
     protected static ?string $navigationGroup = 'Talabe İşleri';
 
     protected static ?string $navigationLabel = 'Talabelerimiz';
-    protected static ?string $navigationIcon = 'phosphor-student-bold';
+    protected static ?string $navigationIcon = 'phosphor-student-thin';
 
 
     public static function form(Form $form): Form
