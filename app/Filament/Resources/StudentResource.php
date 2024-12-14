@@ -40,11 +40,18 @@ class StudentResource extends Resource
                 ->directory('uploads/photos') // Yükleme dizinini ayarlayın
                 ->visibility('public') // Dosyanın genel olarak erişilebilir olmasını sağlar
                 ->uploadingMessage('Resim Yükleniyor...'),
-            TextInput::make('name')->required()->label('Talebenin Adı'),
-            TextInput::make('phone')->tel()->label('Telefon Numarası'),
-            DatePicker::make('birth_date')->label('Doğum Tarihi'),
-            TextInput::make('birth_country')->label('Doğduğu Ülke'),
+            TextInput::make('name')->required()->label('Talebenin Adı')->required(),
+            TextInput::make('phone')->tel()->label('Telefon Numarası')->required(),
+            TextInput::make('email')->email()->label('E-Posta Adresi'),
+            Select::make('gender')
+                ->options([
+                    'Kız' => 'Kız',
+                    'Erkek' => 'Erkek',
+                ])->label('Cinsiyet')->required()->default('Erkek'),
+            DatePicker::make('birth_date')->label('Doğum Tarihi')->required(),
+            TextInput::make('birth_country')->label('Doğduğu Ülke')->required(),
             Select::make('citizenships')
+                ->required()
                 ->multiple()
                 ->options([
                     'Türkiye' => 'Türkiye',
@@ -60,18 +67,21 @@ class StudentResource extends Resource
                     'Macaristan'=> 'Macaristan',
                 ])->label('Vatandaşlıkları'),
             Select::make('school_status')
+                ->required()
                 ->options([
-                    'student' => 'Öğrenci',
-                    'graduate' => 'Mezun',
-                    'dropped_out' => 'Okulu Bırakmış',
+                    'Öğrenci' => 'Öğrenci',
+                    'Mezun' => 'Mezun',
+                    'Okulu Bırakmıs' => 'Okulu Bırakmış',
                 ])->label('Okul Durumu'),
             Select::make('military_status')
+                ->required()
                 ->options([
                     'completed' => 'Tamamlanmış',
                     'postponed' => 'Ertelenmiş',
                     'not_applicable' => 'Geçerli Değil',
                 ])->label('Askerlik Durumu'),
             Select::make('parent_status')
+                ->required()
                 ->options([
                     'Anne Baba Birlikte' => 'Anne Baba Birlikte',
                     'Ayrı' => 'Ayrı',
@@ -79,6 +89,7 @@ class StudentResource extends Resource
                     'Baba Vefat' => 'Baba Vefat',
                 ])->label('Anne Baba Durumu'),
             Select::make('visa-status')
+                ->required()
                 ->options([
                     'Mavi Kart Sahibi' => 'Mavi Kart Sahibi',
                     'Vize Sahibi' => 'Vize Sahibi',
@@ -88,6 +99,7 @@ class StudentResource extends Resource
             TextInput::make('guardian_phone')->tel()->label('İrtibat Veli Telefon'),
             TextInput::make('hometown')->label('Memleketi'),
             Select::make('languages')
+                ->required()
                 ->multiple()
                 ->options([
                     'Türkçe' => 'Türkçe',

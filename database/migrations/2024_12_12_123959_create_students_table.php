@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('birth_country')->nullable();
             $table->json('citizenships')->nullable();
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->string('course_address')->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('gender')->nullable(); // Cinsiyet (isteğe bağlı)
             $table->timestamps();
         });
     }

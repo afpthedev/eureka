@@ -16,7 +16,7 @@ class Student extends Model
         'birth_date',
         'birth_country',
         'citizenships',
-        'visa_status',
+        'visa-status',
         'school_status',
         'military_status',
         'parent_status',
@@ -28,6 +28,8 @@ class Student extends Model
         'course_address',
         'latitude',
         'longitude',
+        'gender',
+        'email',
     ];
         // Timestamps kullanımı
     public $timestamps = true;
