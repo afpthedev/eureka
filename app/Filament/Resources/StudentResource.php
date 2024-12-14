@@ -6,6 +6,7 @@ use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
 use Filament\Actions\ActionGroup;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -148,6 +149,11 @@ class StudentResource extends Resource
            StudentResource\RelationManagers\ReportsRelationManager::class,
         ];
     }
+
+  //  public static function shouldRegisterNavigation(): bool{
+        // Sadece 'Talebe Görevlisi' rolü olan kullanıcılar navigasyonu görür
+    //    return Filament::auth()->user()?->hasRole('Talabe Görevlisi');
+    //}
 
     public static function getPages(): array
     {

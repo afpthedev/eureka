@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(SuperAdminSeeder::class); // SuperAdminSeeder'ı çalıştır
 
         User::factory()->create([
             'name' => 'Test User',

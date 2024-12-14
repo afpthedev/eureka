@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
+        "bezhansalleh/filament-shield": "^3.3",
         "brunocfalcao/blade-feather-icons": "^4.0",
         "cheesegrits/filament-google-maps": "^3.0",
         "codeat3/blade-carbon-icons": "^2.31",
@@ -22,7 +23,9 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "*",
         "maatwebsite/excel": "^3.1",
-        "postare/blade-mdi": "*"
+        "owenvoke/blade-fontawesome": "^2.8",
+        "postare/blade-mdi": "*",
+        "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
