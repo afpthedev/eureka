@@ -74,4 +74,11 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'profile-photos' => [
+        'driver' => 'public', // 'local', 's3', vb. seçebilirsiniz.
+        'root' => storage_path('app/public/profile-photos'),
+        'url' => env('APP_URL') . '/storage/profile-photos',
+        'visibility' => 'public',
+    ],
+
 ];

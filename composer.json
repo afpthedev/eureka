@@ -19,12 +19,15 @@
         "filament/forms": "^3.2",
         "filament/tables": "^3.2",
         "filament/widgets": "^3.2",
+        "jeffgreco13/filament-breezy": "^2.4",
         "laravel/framework": "^11.31",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "*",
         "maatwebsite/excel": "^3.1",
         "owenvoke/blade-fontawesome": "^2.8",
         "postare/blade-mdi": "*",
+        "solution-forest/filament-email-2fa": "^1.1",
         "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {

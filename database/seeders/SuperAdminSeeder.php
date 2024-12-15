@@ -37,7 +37,7 @@ class SuperAdminSeeder extends Seeder
         }
 
         // 2. Superadmin rolünü oluştur ve tüm izinleri ata
-        $superAdminRole = Role::firstOrCreate(['name' => 'superadmin']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
         $superAdminRole->syncPermissions(Permission::all());
 
         // 3. Superadmin kullanıcı oluştur

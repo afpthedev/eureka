@@ -61,3 +61,7 @@ Bu proje, kullanıcıların veri setlerini analiz edebileceği, makine öğrenme
    docker run --name my_postgres -e POSTGRES_HOST_AUTH_METHOD=trust -p 5432:5432 -d postgres
 
 
+
+### İki Faktör Kimlik Doğrulama (2FA) ve Veritabanı Yönetimi ##
+İphone da Password veyahut şifreler kullanılabilir. 
+
