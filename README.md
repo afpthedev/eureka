@@ -72,3 +72,4 @@ Bu proje, kullanıcıların veri setlerini analiz edebileceği, makine öğrenme
 https://filamentphp.com/plugins/jeffgreco-breezy
 https://filamentphp.com/plugins/guava-calendar#installation
 https://filamentphp.com/plugins/bezhansalleh-shield
+https://filamentphp.com/plugins/bezhansalleh-language-switch
