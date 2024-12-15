@@ -9,9 +9,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Pages;
-use Filament\Pages\Auth\EditProfile;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -25,8 +23,6 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use Rawilk\ProfileFilament\ProfileFilamentPlugin;
-use Solutionforest\FilamentEmail2fa\FilamentEmail2faPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -38,7 +34,6 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->registration()
-
             ->colors([
                 'primary' => '#2d6a4f',
                 'success' => Color::Emerald,
@@ -54,8 +49,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-               //composer require bezhansalleh/filament-shield StudentStatistics::class,
+               //composer require bezhansalleh/filament-shield
                 Widgets\AccountWidget::class,
+                StudentStatistics::class,
             ])
             ->middleware([
                 EncryptCookies::class,

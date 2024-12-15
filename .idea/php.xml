@@ -186,6 +186,10 @@
       <path value="$PROJECT_DIR$/vendor/jeffgreco13/filament-breezy" />
       <path value="$PROJECT_DIR$/vendor/bacon/bacon-qr-code" />
       <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/solution-forest/filament-email-2fa" />
+      <path value="$PROJECT_DIR$/vendor/laravel/sanctum" />
+      <path value="$PROJECT_DIR$/vendor/awcodes/filament-versions" />
+      <path value="$PROJECT_DIR$/vendor/bezhansalleh/filament-language-switch" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
