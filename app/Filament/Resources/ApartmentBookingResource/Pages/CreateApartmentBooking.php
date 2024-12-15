@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filament\Resources\ReportResource\Pages;
+namespace App\Filament\Resources\ApartmentBookingResource\Pages;
 
-use App\Filament\Resources\ReportResource;
+use App\Filament\Resources\ApartmentBookingResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateReport extends CreateRecord
+class CreateApartmentBooking extends CreateRecord
 {
-    protected static string $resource = ReportResource::class;
+    protected static string $resource = ApartmentBookingResource::class;
+
 
     protected function getRedirectUrl(): string
     {
         // Kayıt işleminden sonra List Kurban sayfasına yönlendirme
         return $this->getResource()::getUrl('index');
     }
-
 }

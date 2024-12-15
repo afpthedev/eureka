@@ -190,6 +190,8 @@
       <path value="$PROJECT_DIR$/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/vendor/awcodes/filament-versions" />
       <path value="$PROJECT_DIR$/vendor/bezhansalleh/filament-language-switch" />
+      <path value="$PROJECT_DIR$/vendor/guava/calendar" />
+      <path value="$PROJECT_DIR$/vendor/mallardduck/blade-lucide-icons" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

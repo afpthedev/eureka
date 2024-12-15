@@ -65,3 +65,10 @@ Bu proje, kullanıcıların veri setlerini analiz edebileceği, makine öğrenme
 ### İki Faktör Kimlik Doğrulama (2FA) ve Veritabanı Yönetimi ##
 İphone da Password veyahut şifreler kullanılabilir. 
 
+
+
+## Kullanılan Kaynaklar ##
+
+https://filamentphp.com/plugins/jeffgreco-breezy
+https://filamentphp.com/plugins/guava-calendar#installation
+https://filamentphp.com/plugins/bezhansalleh-shield

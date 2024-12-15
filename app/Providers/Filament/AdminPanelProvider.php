@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Resources\StudentResource\Widgets\StudentStatistics;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Forms\Components\FileUpload;
@@ -49,10 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-               //composer require bezhansalleh/filament-shield
-                Widgets\AccountWidget::class,
-                StudentStatistics::class,
-            ])
+                Widgets\AccountWidget::class,])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
