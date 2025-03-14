@@ -1,0 +1,6 @@
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/model/Stock.java
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/StockPredictionApplication.java
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/service/TahminService.java
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/controller/StockController.java
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/config/MLServiceConfig.java
+/home/kolaysoft-pc/IdeaProjects/eureka/backend/src/main/java/com/example/project/repository/StockRepository.java
